@@ -37,26 +37,24 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Set layout manager for upcoming events (horizontal)
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         binding.rvHomeUpcoming.layoutManager = layoutManager
 
-        // Set layout manager for finished events (vertical, single column)
         binding.rvHomeFinished.layoutManager = LinearLayoutManager(context)
 
-        // Initialize adapters with click listener
         adapter = EventAdapter { selectedEvent ->
-            val action = HomeFragmentDirections.actionNavigationHomeToDetailEventFragment(selectedEvent)
+            val action =
+                HomeFragmentDirections.actionNavigationHomeToDetailEventFragment(selectedEvent)
             findNavController().navigate(action)
         }
 
         carouselAdapter = CarouselAdapter { selectedEvent ->
-            val action = HomeFragmentDirections.actionNavigationHomeToDetailEventFragment(selectedEvent)
+            val action =
+                HomeFragmentDirections.actionNavigationHomeToDetailEventFragment(selectedEvent)
             findNavController().navigate(action)
         }
 
-        // Observe ViewModel data
         homeViewModel.listUpcomingEvents.observe(viewLifecycleOwner) { consumerEvents ->
             setUpcomingEventData(consumerEvents)
         }
@@ -71,19 +69,16 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUpcomingEventData(consumerEvents: List<ListEventsItem>) {
-        // Set data for upcoming events
         carouselAdapter.submitList(consumerEvents)
         binding.rvHomeUpcoming.adapter = carouselAdapter
     }
 
     private fun setFinishedEventData(consumerEvents: List<ListEventsItem>) {
-        // Set data for finished events
         adapter.submitList(consumerEvents)
         binding.rvHomeFinished.adapter = adapter
     }
 
     private fun showLoading(isLoading: Boolean) {
-        // Show or hide loading indicator
         if (isLoading) {
             binding.homeLoading.visibility = View.VISIBLE
         } else {

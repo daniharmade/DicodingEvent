@@ -17,14 +17,14 @@ class FinishedFragment : Fragment() {
     private var _binding: FragmentFinishedBinding? = null
     private val finishedViewModel by viewModels<FinishedViewModel>()
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     private lateinit var adapter: EventAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentFinishedBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -35,7 +35,9 @@ class FinishedFragment : Fragment() {
         binding.rvFinishedEvent.layoutManager = LinearLayoutManager(binding.root.context)
 
         adapter = EventAdapter { selectedEvent ->
-            val action = FinishedFragmentDirections.actionNavigationFinishedToDetailEventFragment(selectedEvent)
+            val action = FinishedFragmentDirections.actionNavigationFinishedToDetailEventFragment(
+                selectedEvent
+            )
             findNavController().navigate(action)
         }
 

@@ -16,8 +16,6 @@ class UpcomingFragment : Fragment() {
 
     private var _binding: FragmentUpcomingBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     private val upcomingViewModel by viewModels<UpcomingViewModel>()
@@ -25,8 +23,10 @@ class UpcomingFragment : Fragment() {
     private lateinit var adapter: EventAdapter
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentUpcomingBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -37,7 +37,9 @@ class UpcomingFragment : Fragment() {
         binding.rvUpcomingEvent.layoutManager = LinearLayoutManager(binding.root.context)
 
         adapter = EventAdapter { selectedEvent ->
-            val action = UpcomingFragmentDirections.actionNavigationUpcomingToDetailEventFragment(selectedEvent)
+            val action = UpcomingFragmentDirections.actionNavigationUpcomingToDetailEventFragment(
+                selectedEvent
+            )
             findNavController().navigate(action)
         }
 

@@ -46,7 +46,7 @@ class DetailEventFragment : Fragment() {
         val eventData = args.selectedEvent
         detailEventViewModel.setEvent(eventData)
 
-        detailEventViewModel.event.observe(viewLifecycleOwner, Observer{ event ->
+        detailEventViewModel.event.observe(viewLifecycleOwner, Observer { event ->
 
             // Menampilkan nama acara
             binding.tvDetailName.text = event.name
@@ -66,11 +66,14 @@ class DetailEventFragment : Fragment() {
                 .replace("\\u003E", ">")
 
             // Menampilkan deskripsi acara dalam format HTML
-            binding.tvDetailDescription.text = Html.fromHtml(cleanedDescription, Html.FROM_HTML_MODE_COMPACT)
+            binding.tvDetailDescription.text =
+                Html.fromHtml(cleanedDescription, Html.FROM_HTML_MODE_COMPACT)
 
             // Formatter untuk parsing dan formatting tanggal
-            val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            val outputFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy, HH:mm", Locale("id", "ID"))
+            val inputFormatter =
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val outputFormatter =
+                DateTimeFormatter.ofPattern("d MMMM yyyy, HH:mm", Locale("id", "ID"))
 
             // Parsing waktu mulai dan selesai acara
             val beginDateTime = LocalDateTime.parse(event.beginTime, inputFormatter)
@@ -112,6 +115,7 @@ class DetailEventFragment : Fragment() {
                 findNavController().navigateUp()
                 true
             }
+
             else -> false
         }
     }

@@ -16,10 +16,10 @@ import java.time.format.DateTimeFormatter
 class UpcomingViewModel : ViewModel() {
 
     private val _listEvents = MutableLiveData<List<ListEventsItem>>()
-    val listEvents : LiveData<List<ListEventsItem>> = _listEvents
+    val listEvents: LiveData<List<ListEventsItem>> = _listEvents
 
     private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading : LiveData<Boolean> = _isLoading
+    val isLoading: LiveData<Boolean> = _isLoading
 
     companion object {
         private const val TAG = "UpcomingViewModel"
@@ -52,6 +52,7 @@ class UpcomingViewModel : ViewModel() {
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
+
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
                 _isLoading.value = false
                 Log.e(TAG, "onFailure: ${t.message.toString()}")

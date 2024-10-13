@@ -11,11 +11,14 @@ import com.example.dicodingevent.databinding.ItemViewEventBinding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class EventAdapter(private val onItemClicked: (ListEventsItem) -> Unit) : ListAdapter<ListEventsItem, EventAdapter.MyViewHolder>(
-    DIFF_CALLBACK) {
+class EventAdapter(private val onItemClicked: (ListEventsItem) -> Unit) :
+    ListAdapter<ListEventsItem, EventAdapter.MyViewHolder>(
+        DIFF_CALLBACK
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val binding = ItemViewEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemViewEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyViewHolder(binding)
     }
 
@@ -36,7 +39,7 @@ class EventAdapter(private val onItemClicked: (ListEventsItem) -> Unit) : ListAd
         // Mengubah (parse) string endTime dari event menjadi objek LocalDateTime menggunakan formatter
         val endDateTime = LocalDateTime.parse(event.endTime, formatter)
 
-        holder.binding.tvItemStatus.text = when{
+        holder.binding.tvItemStatus.text = when {
             // Jika waktu saat ini setelah endDateTime, tampilkan "Selesai"
             currentTime.isAfter(endDateTime) -> "Selesai"
             currentTime.isBefore(beginDateTime) -> {
@@ -45,7 +48,7 @@ class EventAdapter(private val onItemClicked: (ListEventsItem) -> Unit) : ListAd
                 val timeUntilStart = java.time.Duration.between(currentTime, beginDateTime)
 
                 // Jika selisih waktu kurang dari atau sama dengan 24 jam, tampilkan dalam hitungan jam
-                if (timeUntilStart.toHours() <= 24){
+                if (timeUntilStart.toHours() <= 24) {
                     "${timeUntilStart.toHours()} Jam Lagi"
 
                 } else {
@@ -74,10 +77,17 @@ class EventAdapter(private val onItemClicked: (ListEventsItem) -> Unit) : ListAd
 
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListEventsItem>() {
-            override fun areItemsTheSame(oldItem: ListEventsItem, newItem: ListEventsItem): Boolean {
+            override fun areItemsTheSame(
+                oldItem: ListEventsItem,
+                newItem: ListEventsItem
+            ): Boolean {
                 return oldItem == newItem
             }
-            override fun areContentsTheSame(oldItem: ListEventsItem, newItem: ListEventsItem): Boolean {
+
+            override fun areContentsTheSame(
+                oldItem: ListEventsItem,
+                newItem: ListEventsItem
+            ): Boolean {
                 return oldItem == newItem
             }
         }

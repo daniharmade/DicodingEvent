@@ -1,5 +1,6 @@
 [versions]
 agp = "8.6.1"
+appcompatVersion = "1.6.1"
 converterGson = "2.9.0"
 desugar_jdk_libs = "1.1.5"
 glide = "4.16.0"
@@ -23,6 +24,7 @@ navigationUiKtxVersion = "2.5.3"
 retrofit = "2.9.0"
 
 [libraries]
+androidx-appcompat-v161 = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-navigation-fragment-ktx-v253 = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtxVersion" }
 androidx-navigation-ui-ktx-v253 = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationUiKtxVersion" }

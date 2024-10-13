@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
-    id ("androidx.navigation.safeargs")
+    id("androidx.navigation.safeargs")
 }
 
 android {
@@ -58,10 +58,10 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.logging.interceptor)
-    implementation (libs.glide.v4120)
+    implementation(libs.glide.v4120)
     //noinspection UseTomlInstead
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
-    coreLibraryDesugaring (libs.desugar.jdk.libs)
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     implementation(libs.androidx.navigation.fragment.ktx.v253)
     implementation(libs.androidx.navigation.ui.ktx.v253)
