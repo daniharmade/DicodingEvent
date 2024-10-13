@@ -47,17 +47,18 @@ class DetailEventFragment : Fragment() {
         detailEventViewModel.setEvent(eventData)
 
         detailEventViewModel.event.observe(viewLifecycleOwner, Observer{ event ->
+
             // Menampilkan nama acara
             binding.tvDetailName.text = event.name
 
             // Menampilkan nama penyelenggara
-            binding.tvDetailOrganizer.text = "Oleh: ${event.ownerName}"
+            binding.tvDetailOrganizer.text = "Penyelenggara: ${event.ownerName}"
 
             // Menampilkan sisa kuota
-            binding.tvDetailQuota.text = "Sisa Kuota: ${event.quota - event.registrants}"
+            binding.tvDetailQuota.text = "Sisa kuota: ${event.quota - event.registrants}"
 
             // Menampilkan kategori acara
-            binding.tvDetailType.text = event.category
+            binding.tvDetailType.text = "Kategori: ${event.category}"
 
             // Membersihkan deskripsi acara dari karakter escape
             val cleanedDescription = event.description
@@ -96,7 +97,15 @@ class DetailEventFragment : Fragment() {
         })
     }
 
-    @Deprecated("Deprecated in Java") // Menyuppress peringatan tentang metode yang sudah deprecated
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.detailEventLoading.visibility = View.VISIBLE
+        } else {
+            binding.detailEventLoading.visibility = View.GONE
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {

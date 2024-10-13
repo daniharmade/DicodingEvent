@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Dicoding Event</string>
-    <string name="title_upcoming">Upcoming</string>
-    <string name="title_finished">Finished</string>
+    <string name="title_upcoming">Upcoming Events</string>
+    <string name="title_finished">Finished Events</string>
     <string name="title_home">Home</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -10,7 +10,7 @@
     <string name="type_event">Jenis Event</string>
     <string name="status_event">Status Event</string>
     <string name="description_photo">Event Foto</string>
-    <string name="organize_event">Dilaksanakan Oleh</string>
+    <string name="organize_event">Penyelenggara</string>
     <string name="kuota_event">Kapasitas\n</string>
     <string name="time_event">Waktu Pelaksanaan</string>
     <string name="btn_register">Daftar Sekarang!</string>

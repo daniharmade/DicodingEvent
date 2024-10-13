@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingevent.adapter.EventAdapter
 import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.databinding.FragmentFinishedBinding
@@ -32,7 +32,7 @@ class FinishedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.rvFinishedEvent.layoutManager = GridLayoutManager(binding.root.context, 2)
+        binding.rvFinishedEvent.layoutManager = LinearLayoutManager(binding.root.context)
 
         adapter = EventAdapter { selectedEvent ->
             val action = FinishedFragmentDirections.actionNavigationFinishedToDetailEventFragment(selectedEvent)
