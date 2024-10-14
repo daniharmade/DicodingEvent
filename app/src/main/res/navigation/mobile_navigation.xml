@@ -44,4 +44,14 @@
             android:name="selectedEvent"
             app:argType="com.example.dicodingevent.data.response.ListEventsItem" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_search"
+        android:name="com.example.dicodingevent.ui.search.SearchFragment"
+        android:label="@string/search_title"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_navigation_search_to_detailEventFragment"
+            app:destination="@id/detailEventFragment" />
+    </fragment>
 </navigation>

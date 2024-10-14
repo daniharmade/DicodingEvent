@@ -7,11 +7,9 @@
     android:background="#F4F6F8"
     tools:context=".ui.home.HomeFragment">
 
-    <!-- ScrollView to make the content scrollable -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,54 +17,46 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- TextView for title -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/app_name"
-                android:textColor="#000000"
+                android:textColor="#000"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <!-- Upcoming Events Section -->
             <TextView
                 android:id="@+id/tv_home_upcoming"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/title_upcoming"
-                android:textColor="#333333"
+                android:textColor="#333"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <!-- Horizontal RecyclerView for Upcoming Events -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_home_upcoming"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal" />
+                android:layout_marginTop="8dp" />
 
-            <!-- Finished Events Section -->
             <TextView
                 android:id="@+id/tv_home_finished"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/title_finished"
-                android:textColor="#333333"
+                android:textColor="#333"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <!-- Vertical RecyclerView for Finished Events -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_home_finished"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="vertical" />
+                android:layout_marginTop="8dp" />
 
         </LinearLayout>
     </ScrollView>
@@ -78,5 +68,4 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone" />
-
 </FrameLayout>

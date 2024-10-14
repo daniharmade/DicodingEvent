@@ -10,9 +10,7 @@ import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.databinding.CarouselViewEventBinding
 
 class CarouselAdapter(private val onItemClicked: (ListEventsItem) -> Unit) :
-    ListAdapter<ListEventsItem, CarouselAdapter.MyViewHolder>(
-        DIFF_CALLBACK
-    ) {
+    ListAdapter<ListEventsItem, CarouselAdapter.MyViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding =
@@ -20,37 +18,37 @@ class CarouselAdapter(private val onItemClicked: (ListEventsItem) -> Unit) :
         return MyViewHolder(binding)
     }
 
-    class MyViewHolder(val binding: CarouselViewEventBinding) :
-        RecyclerView.ViewHolder(binding.root)
-
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val event = getItem(position)
+        holder.bind(event, onItemClicked)
+    }
 
-        holder.binding.tvCarouselItemName.text = event.name
-        Glide.with(holder.binding.root.context)
-            .load(event.imageLogo)
-            .into(holder.binding.imgCarouselItemPhoto)
+    class MyViewHolder(private val binding: CarouselViewEventBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        holder.binding.root.setOnClickListener {
-            onItemClicked(event)
+        fun bind(event: ListEventsItem, onItemClicked: (ListEventsItem) -> Unit) {
+            binding.tvCarouselItemName.text = event.name
+            Glide.with(binding.root.context).load(event.imageLogo)
+                .into(binding.imgCarouselItemPhoto)
+
+            val remainingQuota = event.quota - event.registrants
+            binding.tvDetailQuota.text = if (remainingQuota > 0) {
+                "Available: $remainingQuota Slot"
+            } else {
+                "Full Slot"
+            }
+
+            binding.root.setOnClickListener { onItemClicked(event) }
         }
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListEventsItem>() {
-            override fun areItemsTheSame(
-                oldItem: ListEventsItem,
-                newItem: ListEventsItem
-            ): Boolean {
-                return oldItem == newItem
-            }
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListEventsItem>() {
+            override fun areItemsTheSame(oldItem: ListEventsItem, newItem: ListEventsItem) =
+                oldItem.id == newItem.id
 
-            override fun areContentsTheSame(
-                oldItem: ListEventsItem,
-                newItem: ListEventsItem
-            ): Boolean {
-                return oldItem == newItem
-            }
+            override fun areContentsTheSame(oldItem: ListEventsItem, newItem: ListEventsItem) =
+                oldItem == newItem
         }
     }
 }

@@ -15,4 +15,8 @@
     <string name="time_event">Waktu Pelaksanaan</string>
     <string name="btn_register">Daftar Sekarang!</string>
     <string name="event_detail">Detail Event</string>
+    <string name="title_result_search">Event:</string>
+    <string name="search_hint">Cari Event..</string>
+    <string name="search_title">Search</string>
+    <string name="no_results_found">Event Not Found!</string>
 </resources>

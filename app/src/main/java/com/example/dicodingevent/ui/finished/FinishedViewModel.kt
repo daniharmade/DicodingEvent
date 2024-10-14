@@ -21,8 +21,9 @@ class FinishedViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    companion object {
-        private const val TAG = "FinishedViewModel"
+    private companion object {
+        const val TAG = "FinishedViewModel"
+        const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
     }
 
     init {
@@ -31,23 +32,14 @@ class FinishedViewModel : ViewModel() {
 
     private fun getEvents() {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().getEvents()
-        client.enqueue(object : Callback<EventResponse> {
-            override fun onResponse(
-                call: Call<EventResponse>,
-                response: Response<EventResponse>
-            ) {
+        ApiConfig.getApiService().getEvents().enqueue(object : Callback<EventResponse> {
+            override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
                 _isLoading.value = false
                 if (response.isSuccessful) {
-                    val currentTime = LocalDateTime.now()
-                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-
                     val finishedEvents = response.body()?.listEvents?.filter { event ->
-                        val endDateTime = LocalDateTime.parse(event.endTime, formatter)
-                        currentTime.isAfter(endDateTime)
+                        LocalDateTime.now().isAfter(LocalDateTime.parse(event.endTime, DateTimeFormatter.ofPattern(DATE_FORMAT)))
                     }
-
-                    _listEvents.value = finishedEvents!!
+                    _listEvents.value = finishedEvents ?: emptyList()
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }
@@ -55,7 +47,7 @@ class FinishedViewModel : ViewModel() {
 
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
                 _isLoading.value = false
-                Log.e(TAG, "onFailure: ${t.message.toString()}")
+                Log.e(TAG, "onFailure: ${t.message}")
             }
         })
     }

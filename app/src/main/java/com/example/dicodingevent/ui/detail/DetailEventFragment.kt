@@ -12,10 +12,10 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.databinding.FragmentDetailEventBinding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -39,73 +39,48 @@ class DetailEventFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("SetTextI18n") // Menyuppress peringatan tentang penggunaan metode deprecated
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val eventData = args.selectedEvent
-        detailEventViewModel.setEvent(eventData)
+        detailEventViewModel.setEvent(args.selectedEvent)
 
-        detailEventViewModel.event.observe(viewLifecycleOwner, Observer { event ->
+        detailEventViewModel.event.observe(viewLifecycleOwner) { event ->
+            binding.apply {
+                tvDetailName.text = event.name
+                tvDetailOrganizer.text = "Organizer: ${event.ownerName}"
+                tvDetailQuota.text = "Remaining Quota: ${event.quota - event.registrants} Slot"
+                tvDetailType.text = "Category: ${event.category}"
+                tvDetailDescription.text = Html.fromHtml(cleanDescription(event.description), Html.FROM_HTML_MODE_COMPACT)
+                tvDetailTime.text = formatEventTime(event)
 
-            // Menampilkan nama acara
-            binding.tvDetailName.text = event.name
+                Glide.with(requireContext())
+                    .load(event.imageLogo)
+                    .into(imgDetailPhoto)
 
-            // Menampilkan nama penyelenggara
-            binding.tvDetailOrganizer.text = "Penyelenggara: ${event.ownerName}"
-
-            // Menampilkan sisa kuota
-            binding.tvDetailQuota.text = "Sisa kuota: ${event.quota - event.registrants}"
-
-            // Menampilkan kategori acara
-            binding.tvDetailType.text = "Kategori: ${event.category}"
-
-            // Membersihkan deskripsi acara dari karakter escape
-            val cleanedDescription = event.description
-                .replace("\\u003C", "<")
-                .replace("\\u003E", ">")
-
-            // Menampilkan deskripsi acara dalam format HTML
-            binding.tvDetailDescription.text =
-                Html.fromHtml(cleanedDescription, Html.FROM_HTML_MODE_COMPACT)
-
-            // Formatter untuk parsing dan formatting tanggal
-            val inputFormatter =
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            val outputFormatter =
-                DateTimeFormatter.ofPattern("d MMMM yyyy, HH:mm", Locale("id", "ID"))
-
-            // Parsing waktu mulai dan selesai acara
-            val beginDateTime = LocalDateTime.parse(event.beginTime, inputFormatter)
-            val endDateTime = LocalDateTime.parse(event.endTime, inputFormatter)
-
-            // Memformat tanggal dan waktu
-            val formattedDate = beginDateTime.format(outputFormatter)
-            val formattedEndTime = endDateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
-
-            // Menampilkan waktu acara
-            binding.tvDetailTime.text = "$formattedDate - $formattedEndTime WIB"
-
-            // Menggunakan Glide untuk memuat gambar acara
-            Glide.with(requireContext())
-                .load(event.imageLogo)
-                .into(binding.imgDetailPhoto)
-
-            // Button Pendaftaran
-            binding.btnRegister.setOnClickListener {
-                // Membuka link acara di browser
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(event.link))
-                startActivity(browserIntent)
+                btnRegister.setOnClickListener {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(event.link)))
+                }
             }
-        })
+        }
+    }
+
+    private fun cleanDescription(description: String): String {
+        return description.replace("\\u003C", "<").replace("\\u003E", ">")
+    }
+
+    private fun formatEventTime(event: ListEventsItem): String {
+        val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        val outputFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy, HH:mm", Locale("id", "ID"))
+
+        val beginDateTime = LocalDateTime.parse(event.beginTime, inputFormatter)
+        val endDateTime = LocalDateTime.parse(event.endTime, inputFormatter)
+
+        return "${beginDateTime.format(outputFormatter)} - ${endDateTime.format(DateTimeFormatter.ofPattern("HH:mm"))} WIB"
     }
 
     private fun showLoading(isLoading: Boolean) {
-        if (isLoading) {
-            binding.detailEventLoading.visibility = View.VISIBLE
-        } else {
-            binding.detailEventLoading.visibility = View.GONE
-        }
+        binding.detailEventLoading.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     @Deprecated("Deprecated in Java")
@@ -115,7 +90,6 @@ class DetailEventFragment : Fragment() {
                 findNavController().navigateUp()
                 true
             }
-
             else -> false
         }
     }

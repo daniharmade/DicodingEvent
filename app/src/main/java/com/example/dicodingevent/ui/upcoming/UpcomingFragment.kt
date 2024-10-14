@@ -9,60 +9,39 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dicodingevent.adapter.EventAdapter
-import com.example.dicodingevent.data.response.ListEventsItem
 import com.example.dicodingevent.databinding.FragmentUpcomingBinding
 
 class UpcomingFragment : Fragment() {
 
     private var _binding: FragmentUpcomingBinding? = null
-
     private val binding get() = _binding!!
-
     private val upcomingViewModel by viewModels<UpcomingViewModel>()
-
     private lateinit var adapter: EventAdapter
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentUpcomingBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+        FragmentUpcomingBinding.inflate(inflater, container, false).also { _binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.rvUpcomingEvent.layoutManager = LinearLayoutManager(binding.root.context)
+        setupRecyclerView()
+        setupObserver()
+    }
 
+    private fun setupRecyclerView() {
         adapter = EventAdapter { selectedEvent ->
-            val action = UpcomingFragmentDirections.actionNavigationUpcomingToDetailEventFragment(
-                selectedEvent
-            )
+            val action = UpcomingFragmentDirections.actionNavigationUpcomingToDetailEventFragment(selectedEvent)
             findNavController().navigate(action)
         }
-
-        upcomingViewModel.listEvents.observe(viewLifecycleOwner) { consumerEvents ->
-            setEventData(consumerEvents)
-        }
-
-        upcomingViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            showLoading(isLoading)
+        binding.rvUpcomingEvent.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = this@UpcomingFragment.adapter
         }
     }
 
-    private fun setEventData(consumerEvents: List<ListEventsItem>) {
-        adapter.submitList(consumerEvents)
-        binding.rvUpcomingEvent.adapter = adapter
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        if (isLoading) {
-            binding.upcomingLoading.visibility = View.VISIBLE
-        } else {
-            binding.upcomingLoading.visibility = View.GONE
-        }
+    private fun setupObserver() {
+        upcomingViewModel.listEvents.observe(viewLifecycleOwner) { adapter.submitList(it) }
+        upcomingViewModel.isLoading.observe(viewLifecycleOwner) { binding.upcomingLoading.visibility = if (it) View.VISIBLE else View.GONE }
     }
 
     override fun onDestroyView() {

@@ -1,4 +1,4 @@
-package com.example.dicodingevent.ui.upcoming
+package com.example.dicodingevent.ui.search
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -10,10 +10,8 @@ import com.example.dicodingevent.data.retrofit.ApiConfig
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
-class UpcomingViewModel : ViewModel() {
+class SearchViewModel : ViewModel() {
 
     private val _listEvents = MutableLiveData<List<ListEventsItem>>()
     val listEvents: LiveData<List<ListEventsItem>> = _listEvents
@@ -22,23 +20,18 @@ class UpcomingViewModel : ViewModel() {
     val isLoading: LiveData<Boolean> = _isLoading
 
     private companion object {
-        const val TAG = "UpcomingViewModel"
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        const val TAG = "SearchViewModel"
     }
 
-    init {
-        getEvents()
-    }
-
-    private fun getEvents() {
+    fun searchEvent(keyword: String) {
         _isLoading.value = true
-        ApiConfig.getApiService().getEvents().enqueue(object : Callback<EventResponse> {
+        ApiConfig.getApiService().searchEvents(keyword).enqueue(object : Callback<EventResponse> {
             override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
                 _isLoading.value = false
                 if (response.isSuccessful) {
-                    val currentTime = LocalDateTime.now()
-                    _listEvents.value = response.body()?.listEvents?.filter { event ->
-                        currentTime.isBefore(LocalDateTime.parse(event.endTime, formatter))
+                    response.body()?.listEvents?.let {
+                        _listEvents.value = it
+                        Log.e(TAG, "CONSUME RESULTS: $it")
                     }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")

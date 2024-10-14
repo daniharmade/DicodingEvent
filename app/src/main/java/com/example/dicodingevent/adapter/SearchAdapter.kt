@@ -11,8 +11,8 @@ import com.example.dicodingevent.databinding.ItemViewEventBinding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class EventAdapter(private val onItemClicked: (ListEventsItem) -> Unit) :
-    ListAdapter<ListEventsItem, EventAdapter.MyViewHolder>(DIFF_CALLBACK) {
+class SearchAdapter(private val onItemClicked: (ListEventsItem) -> Unit) :
+    ListAdapter<ListEventsItem, SearchAdapter.MyViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding = ItemViewEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -25,12 +25,10 @@ class EventAdapter(private val onItemClicked: (ListEventsItem) -> Unit) :
     }
 
     class MyViewHolder(private val binding: ItemViewEventBinding) : RecyclerView.ViewHolder(binding.root) {
-
         fun bind(event: ListEventsItem, onItemClicked: (ListEventsItem) -> Unit) {
             binding.tvItemName.text = event.name
             binding.tvItemDescription.text = event.summary
             binding.tvItemType.text = event.category
-
             binding.tvItemStatus.text = getEventStatus(event)
 
             Glide.with(binding.root.context)
@@ -53,15 +51,14 @@ class EventAdapter(private val onItemClicked: (ListEventsItem) -> Unit) :
                     if (timeUntilStart.toHours() <= 24) "${timeUntilStart.toHours()} Hour Left"
                     else "${timeUntilStart.toDays()} Day Left"
                 }
-                currentTime.isAfter(beginDateTime) && currentTime.isBefore(endDateTime) -> "Ongoing"
-                else -> "Canceled"
+                else -> "Ongoing"
             }
         }
     }
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListEventsItem>() {
-            override fun areItemsTheSame(oldItem: ListEventsItem, newItem: ListEventsItem) = oldItem.id == newItem.id
+            override fun areItemsTheSame(oldItem: ListEventsItem, newItem: ListEventsItem) = oldItem == newItem
             override fun areContentsTheSame(oldItem: ListEventsItem, newItem: ListEventsItem) = oldItem == newItem
         }
     }
