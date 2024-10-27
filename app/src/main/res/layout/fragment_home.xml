@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F4F6F8"
     tools:context=".ui.home.HomeFragment">
 
     <ScrollView
@@ -22,7 +21,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/app_name"
-                android:textColor="#000"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -32,7 +30,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/title_upcoming"
-                android:textColor="#333"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -48,7 +45,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/title_finished"
-                android:textColor="#333"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 

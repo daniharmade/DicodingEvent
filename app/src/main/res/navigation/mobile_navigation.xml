@@ -54,4 +54,11 @@
             android:id="@+id/action_navigation_search_to_detailEventFragment"
             app:destination="@id/detailEventFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.example.dicodingevent.ui.settings.SettingsFragment"
+        android:label="@string/search_title"
+        tools:layout="@layout/fragment_settings" >
+    </fragment>
 </navigation>

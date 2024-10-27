@@ -65,4 +65,11 @@ dependencies {
 
     implementation(libs.androidx.navigation.fragment.ktx.v253)
     implementation(libs.androidx.navigation.ui.ktx.v253)
+
+    // Fitur Dark Mode
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx.v261)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
 }
