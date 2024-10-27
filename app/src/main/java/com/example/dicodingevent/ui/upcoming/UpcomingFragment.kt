@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -18,14 +19,17 @@ class UpcomingFragment : Fragment() {
     private val upcomingViewModel by viewModels<UpcomingViewModel>()
     private lateinit var adapter: EventAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        FragmentUpcomingBinding.inflate(inflater, container, false).also { _binding = it }.root
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentUpcomingBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        setupObserver()
+        setupSearchView()
+        observeViewModel()
     }
 
     private fun setupRecyclerView() {
@@ -33,15 +37,33 @@ class UpcomingFragment : Fragment() {
             val action = UpcomingFragmentDirections.actionNavigationUpcomingToDetailEventFragment(selectedEvent)
             findNavController().navigate(action)
         }
-        binding.rvUpcomingEvent.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = this@UpcomingFragment.adapter
-        }
+        binding.rvUpcomingEvent.layoutManager = LinearLayoutManager(context)
+        binding.rvUpcomingEvent.adapter = adapter
     }
 
-    private fun setupObserver() {
-        upcomingViewModel.listEvents.observe(viewLifecycleOwner) { adapter.submitList(it) }
-        upcomingViewModel.isLoading.observe(viewLifecycleOwner) { binding.upcomingLoading.visibility = if (it) View.VISIBLE else View.GONE }
+    private fun setupSearchView() {
+        binding.searchBarEvent.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let { upcomingViewModel.searchEvents(it) }
+                return true
+            }
+        })
+    }
+
+    private fun observeViewModel() {
+        upcomingViewModel.listEvents.observe(viewLifecycleOwner) { events ->
+            binding.cvSearchResult.visibility = if (events.isEmpty()) View.GONE else View.VISIBLE
+            binding.tvResultEmpty.visibility = if (events.isEmpty()) View.VISIBLE else View.GONE
+            adapter.submitList(events)  // Update RecyclerView with new events
+        }
+
+        upcomingViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.upcomingLoading.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
     }
 
     override fun onDestroyView() {

@@ -1,5 +1,7 @@
 package com.example.dicodingevent.ui.upcoming
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,14 +18,16 @@ import java.time.format.DateTimeFormatter
 class UpcomingViewModel : ViewModel() {
 
     private val _listEvents = MutableLiveData<List<ListEventsItem>>()
-    val listEvents: LiveData<List<ListEventsItem>> = _listEvents
+    val listEvents: LiveData<List<ListEventsItem>> get() = _listEvents
 
     private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
+    private val allEvents = mutableListOf<ListEventsItem>()
 
     private companion object {
         const val TAG = "UpcomingViewModel"
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
     }
 
     init {
@@ -36,9 +40,13 @@ class UpcomingViewModel : ViewModel() {
             override fun onResponse(call: Call<EventResponse>, response: Response<EventResponse>) {
                 _isLoading.value = false
                 if (response.isSuccessful) {
-                    val currentTime = LocalDateTime.now()
-                    _listEvents.value = response.body()?.listEvents?.filter { event ->
-                        currentTime.isBefore(LocalDateTime.parse(event.endTime, formatter))
+                    response.body()?.listEvents?.let { events ->
+                        val upcomingEvents = events.filter { event ->
+                            LocalDateTime.now().isBefore(LocalDateTime.parse(event.beginTime, DateTimeFormatter.ofPattern(DATE_FORMAT)))
+                        }
+                        allEvents.clear()
+                        allEvents.addAll(upcomingEvents)
+                        _listEvents.value = upcomingEvents
                     }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
@@ -50,5 +58,23 @@ class UpcomingViewModel : ViewModel() {
                 Log.e(TAG, "onFailure: ${t.message}")
             }
         })
+    }
+
+    fun searchEvents(query: String) {
+        _isLoading.value = true  // Set loading to true when search starts
+
+        // Perform the search operation
+        if (query.isEmpty()) {
+            _listEvents.value = allEvents
+        } else {
+            _listEvents.value = allEvents.filter { event ->
+                event.name.contains(query, ignoreCase = true) || event.description.contains(query, ignoreCase = true)
+            }
+        }
+
+        // Delay before setting loading to false for better UX
+        Handler(Looper.getMainLooper()).postDelayed({
+            _isLoading.value = false  // Set loading to false after delay
+        }, 500) // 500 milliseconds delay
     }
 }

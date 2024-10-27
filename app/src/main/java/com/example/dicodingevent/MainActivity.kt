@@ -33,8 +33,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_home,
                 R.id.navigation_upcoming,
                 R.id.navigation_finished,
-                R.id.navigation_search,
-                R.id.navigation_settings
+                R.id.navigation_settings,
+                R.id.navigation_favorite
             )
         )
 
